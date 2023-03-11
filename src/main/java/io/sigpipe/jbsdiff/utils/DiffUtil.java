@@ -73,6 +73,28 @@ public class DiffUtil {
     }
 
     /**
+     * bytes diff operation without file saving
+     * @param oldBytes   source bytes
+     * @param newBytes   new  bytes
+     * @return  patches bytes array
+     * @throws CompressorException when a compression error occurs.
+     * @throws InvalidHeaderException when the bsdiff header is malformed or not present.
+     * @throws IOException  when an error occurs writing the bsdiff control blocks.
+     */
+    public static byte[] diff(byte[] oldBytes, byte[] newBytes)
+            throws CompressorException, InvalidHeaderException, IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        diff(oldBytes, newBytes, out, new DefaultDiffSettings());
+        return out.toByteArray();
+    }
+    public static byte[] diff(byte[] oldBytes, byte[] newBytes,DiffSettings settings)
+            throws CompressorException, InvalidHeaderException, IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        diff(oldBytes, newBytes, out, settings);
+        return out.toByteArray();
+    }
+
+    /**
      * Using two different versions of a file, generate a bsdiff patch that can
      * be applied to the old file to create the new file.
      *
@@ -239,7 +261,6 @@ public class DiffUtil {
         patchOut.close();
 
         header.setOutputLength(newBytes.length);
-
         header.write(out);
         out.write(byteOut.toByteArray());
     }

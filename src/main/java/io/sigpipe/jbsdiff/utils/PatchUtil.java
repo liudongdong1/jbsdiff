@@ -31,15 +31,7 @@ import io.sigpipe.jbsdiff.model.InvalidHeaderException;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * This class provides functionality for using an old file and a patch to
@@ -51,6 +43,22 @@ public class PatchUtil {
 
     private PatchUtil() { }
 
+    /**
+     * Using an old file bytes arrays and its accompanying patch arrays, this method generates a new
+     *      * (updated) file and writes it to an {@link OutputStream}.
+     * @param old  the original ('old') state of the binary bytes arrays
+     * @param patch  a binary patch file bytes arrays to apply to the old state
+     * @return  byte[] of the generated newfile
+     * @throws CompressorException when a compression error occurs.
+     * @throws InvalidHeaderException when the bsdiff header is malformed or not present.
+     * @throws IOException when an I/O error occurs
+     */
+    public static byte[] patch(byte[] old, byte[] patch)
+            throws CompressorException, InvalidHeaderException, IOException{
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        patch(old, patch, out);
+        return out.toByteArray();
+    }
     /**
      * Using an old file and its accompanying patch, this method generates a new
      * (updated) file and writes it to an {@link OutputStream}.
