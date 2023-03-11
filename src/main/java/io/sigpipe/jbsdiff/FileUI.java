@@ -23,22 +23,21 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package io.sigpipe.jbsdiff.ui;
+package io.sigpipe.jbsdiff;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import io.sigpipe.jbsdiff.utils.DiffUtil;
+import io.sigpipe.jbsdiff.utils.PatchUtil;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
-import io.sigpipe.jbsdiff.DefaultDiffSettings;
-import io.sigpipe.jbsdiff.Diff;
-import io.sigpipe.jbsdiff.DiffSettings;
-import io.sigpipe.jbsdiff.InvalidHeaderException;
-import io.sigpipe.jbsdiff.Patch;
+import io.sigpipe.jbsdiff.model.settings.DefaultDiffSettings;
+import io.sigpipe.jbsdiff.model.settings.DiffSettings;
+import io.sigpipe.jbsdiff.model.InvalidHeaderException;
 
 /**
  * Provides an interface for working with bsdiff files on disk.
@@ -69,12 +68,14 @@ public class FileUI {
 
         FileOutputStream out = new FileOutputStream(patchFile);
         DiffSettings settings = new DefaultDiffSettings(compression);
-        Diff.diff(oldBytes, newBytes, out, settings);
+        DiffUtil.diff(oldBytes, newBytes, out, settings);
         out.close();
     }
 
     public static void patch(File oldFile, File newFile, File patchFile)
     throws CompressorException, InvalidHeaderException, IOException {
-        Patch.patch(oldFile, newFile, patchFile);
+        PatchUtil.patch(oldFile, newFile, patchFile);
     }
+
+
 }

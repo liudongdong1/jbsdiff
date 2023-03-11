@@ -23,9 +23,16 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package io.sigpipe.jbsdiff.ui;
+package io.sigpipe.jbsdiff;
+
+import io.sigpipe.jbsdiff.model.settings.DefaultDiffSettings;
+import io.sigpipe.jbsdiff.model.settings.DiffSettings;
+import io.sigpipe.jbsdiff.utils.DiffUtil;
+import io.sigpipe.jbsdiff.utils.PatchUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
 /**
  * Provides a simple command line interface for the io.sigpipe.jbsdiff tools.
@@ -38,17 +45,47 @@ public class CLI {
 
     private CLI() { }
 
+    public static void main(String[] args) throws Exception{
+        String dest ="The compression algorithm used will be detected automatically during\n" +
+                "patch operations.  NOTE: algorithms other than bzip2 are incompatible\n";
+        String source = "The compression algorithm used will be detected automatically during\n" +
+                "patch operations.  NOTE: algorithms other than bzip2 are incompatible\n" +
+                "with the reference implementation of bsdiff!";
+        String patch = "C:\\Users\\liudongdong\\OneDrive - tju.edu.cn\\桌面\\android_sourcecode\\bsdiff\\src\\main\\resources\\patch1.txt";
+        File patchFile = new File(patch);
+        FileOutputStream out = new FileOutputStream(patchFile);
+        String compression = System.getProperty("jbsdiff.compressor", "bzip2");
+        DiffSettings settings = new DefaultDiffSettings(compression);
+        DiffUtil.diff(source.getBytes(), dest.getBytes(), out, settings);
+        out.close();
+        testFile();
+        FileInputStream oldStream = new FileInputStream(patchFile);
+        byte[] patchByte = new byte[(int) patchFile.length()];
+        oldStream.read(patchByte);
+        oldStream.close();
+        String destpath = "C:\\Users\\liudongdong\\OneDrive - tju.edu.cn\\桌面\\android_sourcecode\\bsdiff\\src\\main\\resources\\dest3.txt";
+        File destFile = new File(destpath);
+        FileOutputStream destString = new FileOutputStream(destFile);
+        PatchUtil.patch(source.getBytes(), patchByte, destString);
+        out.close();
+
+    }
     /** Diff or patch with specified files.
      * Format is command oldFile newFile patchFile .
      * Command is either diff or patch */
-    public static void main(String[] args) throws Exception {
-        if ( args.length == 3 ) {
-            args = withCommandGuess( args );
-        }
-        if (args.length < 4) {
-            System.out.println("Not enough parameters!");
-            printUsage();
-        }
+    public static void testFile() throws Exception {
+//        if ( args.length == 3 ) {
+//            args = withCommandGuess( args );
+//        }
+//        if (args.length < 4) {
+//            System.out.println("Not enough parameters!");
+//            printUsage();
+//        }
+        String[] args = new String[4];
+        args[0] = "patch";
+        args[1] = "C:\\Users\\liudongdong\\OneDrive - tju.edu.cn\\桌面\\android_sourcecode\\bsdiff\\src\\main\\resources\\source.txt";
+        args[2] = "C:\\Users\\liudongdong\\OneDrive - tju.edu.cn\\桌面\\android_sourcecode\\bsdiff\\src\\main\\resources\\dest2.txt";
+        args[3] = "C:\\Users\\liudongdong\\OneDrive - tju.edu.cn\\桌面\\android_sourcecode\\bsdiff\\src\\main\\resources\\patch1.txt";
 
         String compression = System.getProperty("jbsdiff.compressor", "bzip2");
         compression = compression.toLowerCase();

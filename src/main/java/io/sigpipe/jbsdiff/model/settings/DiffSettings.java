@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016, Colorado State University
+Copyright (c) 2013, Colorado State University
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -22,3 +22,29 @@ any theory of liability, whether in contract, strict liability, or tort
 (including negligence or otherwise) arising in any way out of the use of this
 software, even if advised of the possibility of such damage.
 */
+
+package io.sigpipe.jbsdiff.model.settings;
+
+/**
+ * Defines directives that control how the Diff process is carried out.
+ *
+ * @author malensek
+ */
+public interface DiffSettings {
+
+    /**
+     * Provides the name of the compression algorithm to use during diffing.
+     *
+     * @return String containing a compression algorithm name to be used by the
+     * Commons Compress CompressorStreamFactory.
+     */
+    public String getCompression();
+
+    /**
+     * Defines the suffix sorting algorithm to be used during Diff creation.
+     *
+     * @param input input array
+     * @return Sorted array of indices
+     */
+    public int[] sort(byte[] input);
+}

@@ -23,8 +23,11 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package io.sigpipe.jbsdiff;
+package io.sigpipe.jbsdiff.utils;
 
+import io.sigpipe.jbsdiff.model.ControlBlock;
+import io.sigpipe.jbsdiff.model.Header;
+import io.sigpipe.jbsdiff.model.InvalidHeaderException;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
@@ -44,9 +47,9 @@ import java.io.OutputStream;
  *
  * @author malensek
  */
-public class Patch {
+public class PatchUtil {
 
-    private Patch() { }
+    private PatchUtil() { }
 
     /**
      * Using an old file and its accompanying patch, this method generates a new
@@ -222,4 +225,6 @@ public class Patch {
                     " bytes read = " + read);
         }
     }
+
+
 }

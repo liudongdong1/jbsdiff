@@ -23,7 +23,7 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package io.sigpipe.jbsdiff;
+package io.sigpipe.jbsdiff.model;
 
 import java.io.IOException;
 import java.io.InputStream;

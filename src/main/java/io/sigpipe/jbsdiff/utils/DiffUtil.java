@@ -23,8 +23,12 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package io.sigpipe.jbsdiff;
+package io.sigpipe.jbsdiff.utils;
 
+import io.sigpipe.jbsdiff.model.*;
+
+import io.sigpipe.jbsdiff.model.settings.DefaultDiffSettings;
+import io.sigpipe.jbsdiff.model.settings.DiffSettings;
 import io.sigpipe.jbsdiff.sort.SearchResult;
 import io.sigpipe.jbsdiff.sort.SuffixSort;
 
@@ -43,9 +47,9 @@ import org.apache.commons.compress.compressors.CompressorStreamFactory;
  *
  * @author malensek
  */
-public class Diff {
+public class DiffUtil {
 
-    private Diff() { }
+    private DiffUtil() { }
 
     /**
      * Using two different versions of a file, generate a bsdiff patch that can

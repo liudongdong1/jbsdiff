@@ -23,7 +23,8 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package io.sigpipe.jbsdiff;
+package io.sigpipe.jbsdiff.model;
+
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +41,7 @@ import java.io.OutputStream;
  *
  * @author malensek
  */
-class ControlBlock {
+public class ControlBlock {
 
     /**
      * Length of the patch diff block
@@ -68,14 +69,12 @@ class ControlBlock {
         diffLength = Offset.readOffset(in);
         extraLength = Offset.readOffset(in);
         seekLength = Offset.readOffset(in);
-        //TODO: validate lengths (should be >= 0)
     }
 
-    public ControlBlock(int diffLength, int extraLength, int seekLength) {
+    public ControlBlock(int diffLength, int extraLength, int seekLength) throws IOException {
         this.diffLength = diffLength;
         this.extraLength = extraLength;
         this.seekLength = seekLength;
-        //TODO: validate lengths (should be >= 0)
     }
 
     /**

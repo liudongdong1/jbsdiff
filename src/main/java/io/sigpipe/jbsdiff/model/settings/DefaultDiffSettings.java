@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2016, Colorado State University
+Copyright (c) 2013, Colorado State University
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -22,3 +22,44 @@ any theory of liability, whether in contract, strict liability, or tort
 (including negligence or otherwise) arising in any way out of the use of this
 software, even if advised of the possibility of such damage.
 */
+
+package io.sigpipe.jbsdiff.model.settings;
+
+import io.sigpipe.jbsdiff.model.settings.DiffSettings;
+import io.sigpipe.jbsdiff.sort.SuffixSort;
+
+import org.apache.commons.compress.compressors.CompressorStreamFactory;
+
+/**
+ * Provides a default set of DiffSettings that produces patches that are
+ * compatible with the bsdiff reference implementation.
+ *
+ * @author malensek
+ */
+public class DefaultDiffSettings implements DiffSettings {
+
+    private String compression;
+
+    public DefaultDiffSettings() {
+        compression = CompressorStreamFactory.BZIP2;
+    }
+
+    public DefaultDiffSettings(String compression) {
+        this.compression = compression;
+    }
+
+    @Override
+    public String getCompression() {
+        return compression;
+    }
+
+    @Override
+    public int[] sort(byte[] input) {
+
+        int[] I = new int[input.length + 1];
+        int[] V = new int[input.length + 1];
+        SuffixSort.qsufsort(I, V, input);
+
+        return I;
+    }
+}

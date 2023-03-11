@@ -23,7 +23,7 @@ any theory of liability, whether in contract, strict liability, or tort
 software, even if advised of the possibility of such damage.
 */
 
-package io.sigpipe.jbsdiff;
+package io.sigpipe.jbsdiff.model;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -42,7 +42,7 @@ import java.io.OutputStream;
  * @author malensek
  */
 
-class Header {
+public class Header {
 
     /**
      * Size of the Header, in bytes.  4 fields * 8 bytes = 32 bytes
