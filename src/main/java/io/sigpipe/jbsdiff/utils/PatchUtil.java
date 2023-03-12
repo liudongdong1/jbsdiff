@@ -28,6 +28,8 @@ package io.sigpipe.jbsdiff.utils;
 import io.sigpipe.jbsdiff.model.ControlBlock;
 import io.sigpipe.jbsdiff.model.Header;
 import io.sigpipe.jbsdiff.model.InvalidHeaderException;
+import io.sigpipe.jbsdiff.model.settings.DefaultDiffSettings;
+import io.sigpipe.jbsdiff.model.settings.DiffSettings;
 import org.apache.commons.compress.compressors.CompressorException;
 import org.apache.commons.compress.compressors.CompressorStreamFactory;
 
@@ -56,7 +58,13 @@ public class PatchUtil {
     public static byte[] patch(byte[] old, byte[] patch)
             throws CompressorException, InvalidHeaderException, IOException{
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        patch(old, patch, out);
+        patch(old, patch, out, new DefaultDiffSettings());
+        return out.toByteArray();
+    }
+    public static byte[] patch(byte[] old, byte[] patch, DiffSettings settings)
+            throws CompressorException, InvalidHeaderException, IOException{
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        patch(old, patch, out, settings);
         return out.toByteArray();
     }
     /**
@@ -72,7 +80,7 @@ public class PatchUtil {
      *     present.
      * @throws IOException when an I/O error occurs
      */
-    public static void patch(byte[] old, byte[] patch, OutputStream out)
+    public static void patch(byte[] old, byte[] patch, OutputStream out, DiffSettings settings)
             throws CompressorException, InvalidHeaderException, IOException {
         /* Read bsdiff header */
         InputStream headerIn = new ByteArrayInputStream(patch);
@@ -92,11 +100,13 @@ public class PatchUtil {
             extraIn.skip(Header.HEADER_SIZE + header.getControlLength() +
                     header.getDiffLength());
 
+
             /* Set up compressed streams */
             CompressorStreamFactory compressor = new CompressorStreamFactory();
-            controlIn = compressor.createCompressorInputStream(controlIn);
-            dataIn = compressor.createCompressorInputStream(dataIn);
-            extraIn = compressor.createCompressorInputStream(extraIn);
+            String compression = settings.getCompression();
+            controlIn = compressor.createCompressorInputStream(compression,controlIn);
+            dataIn = compressor.createCompressorInputStream(compression,dataIn);
+            extraIn = compressor.createCompressorInputStream(compression,extraIn);
 
             /* Start patching */
             int newPointer = 0, oldPointer = 0;
@@ -137,6 +147,10 @@ public class PatchUtil {
     public static void patch(File oldFile, File newFile, File patchFile)
             throws CompressorException, InvalidHeaderException, IOException {
         /* Read bsdiff header */
+            patch(oldFile, newFile, patchFile, new DefaultDiffSettings());
+    }
+    private static void patch(File oldFile, File newFile, File patchFile, DiffSettings settings)
+            throws IOException, InvalidHeaderException, CompressorException {
         InputStream headerIn = new FileInputStream(patchFile);
         Header header = new Header(headerIn);
         headerIn.close();
@@ -156,9 +170,10 @@ public class PatchUtil {
 
             /* Set up compressed streams */
             CompressorStreamFactory compressor = new CompressorStreamFactory();
-            controlIn = compressor.createCompressorInputStream(controlIn);
-            dataIn = compressor.createCompressorInputStream(dataIn);
-            extraIn = compressor.createCompressorInputStream(extraIn);
+            String compression = settings.getCompression();
+            controlIn = compressor.createCompressorInputStream(compression,controlIn);
+            dataIn = compressor.createCompressorInputStream(compression,dataIn);
+            extraIn = compressor.createCompressorInputStream(compression,extraIn);
 
             FileInputStream oldStream = new FileInputStream(oldFile);
             byte[] old = new byte[(int) oldFile.length()];

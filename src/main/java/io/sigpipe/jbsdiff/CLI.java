@@ -57,8 +57,8 @@ public class CLI {
                 "with the reference implementation of bsdiff!";
         String compression = System.getProperty("jbsdiff.compressor", "bzip2");
         DiffSettings settings = new DefaultDiffSettings(compression);
-        byte[] patches = DiffUtil.diff(source.getBytes(),dest.getBytes());
-        byte[] destGen = PatchUtil.patch(source.getBytes(),patches);
+        byte[] patches = DiffUtil.diff(source.getBytes(),dest.getBytes(),settings);
+        byte[] destGen = PatchUtil.patch(source.getBytes(),patches,settings);
         String res = new String(destGen);
         System.out.println("dest file" + res);
     }
@@ -83,7 +83,7 @@ public class CLI {
         String destpath = "C:\\Users\\liudongdong\\OneDrive - tju.edu.cn\\桌面\\android_sourcecode\\bsdiff\\src\\main\\resources\\dest3.txt";
         File destFile = new File(destpath);
         FileOutputStream destString = new FileOutputStream(destFile);
-        PatchUtil.patch(source.getBytes(), patchByte, destString);
+        PatchUtil.patch(source.getBytes(), patchByte, destString, settings);
         out.close();
     }
     /** Diff or patch with specified files.
